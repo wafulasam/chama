@@ -1,8 +1,11 @@
 export interface UserAttributes {
-    id?: number;
-    name: string;
+    user_id?: number;
+    first_name: string;
+    last_name: string;
     email: string;
-    date_of_birth?: string;
-    role: string;
-    profile_picture: string;
+    password: string;
+    role: number;
+    created_at: string;
+    updated_at: string;
+    created_by?: number;
 }

@@ -1,6 +1,9 @@
 // main app
 import express, { Request, Response } from "express";
 import userRoutes from "./routes/userRoutes";
+import activityRoutes from "./routes/activityRoutes";
+import memberRoutes from "./routes/memberRoutes";
+import roleRoutes from "./routes/roleRoutes"; 
 import sequelize from "./databaseConfig";
 import cors from "cors";
 
@@ -14,7 +17,12 @@ app.use(cors({
 }));
 
 // use routes
-app.use('/api', userRoutes)
+app.use('/api', [
+  userRoutes,
+  activityRoutes,
+  memberRoutes,
+  roleRoutes
+]); 
 
 // health check route
 app.get('/', (req:Request, res:Response)=> {
