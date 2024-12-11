@@ -50,7 +50,7 @@ export const createNewMember = async (req: Request, res: Response): Promise<void
 // Update an existing member
 export const updateExistingMember = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
-    const { first_name, last_name, email, date_of_birth, role, profile_picture, password, created_by } = req.body;
+    const { first_name, last_name, email, date_of_birth, profile_picture, password } = req.body;
 
     try {
         const member = await Member.findByPk(id);
@@ -59,10 +59,8 @@ export const updateExistingMember = async (req: Request, res: Response): Promise
             member.last_name = last_name;
             member.email = email;
             member.date_of_birth = date_of_birth;
-            member.role = role;
             member.profile_picture = profile_picture;
             member.password = password;
-            member.created_by = created_by;
             await member.save();
             res.status(200).json(member);
         } else {
