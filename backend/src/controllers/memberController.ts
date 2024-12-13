@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Member from "../models/memberModel";
+import bcrypt from "bcryptjs"
 
 // Get all members
 export const getAllMembers = async (req: Request, res: Response): Promise<void> => {
@@ -29,8 +30,8 @@ export const getMemberById = async (req: Request, res: Response): Promise<void> 
 // Create a new member
 export const createNewMember = async (req: Request, res: Response): Promise<void> => {
     const { first_name, last_name, email, date_of_birth, role, profile_picture, password, created_by } = req.body;
-
     try {
+        const hashedPassword = bcrypt.hashSync(password, 10);
         const newMember = await Member.create({
             first_name,
             last_name,
@@ -38,7 +39,7 @@ export const createNewMember = async (req: Request, res: Response): Promise<void
             date_of_birth,
             role,
             profile_picture,
-            password,
+            password: hashedPassword,
             created_by,
         });
         res.status(201).json(newMember);
@@ -60,7 +61,9 @@ export const updateExistingMember = async (req: Request, res: Response): Promise
             member.email = email;
             member.date_of_birth = date_of_birth;
             member.profile_picture = profile_picture;
-            member.password = password;
+            if (password) {
+                member.password = bcrypt.hashSync(password, 10);
+            }
             await member.save();
             res.status(200).json(member);
         } else {
