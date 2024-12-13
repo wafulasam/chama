@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import User from "../models/userModel"
+import bcrypt from "bcryptjs"
 
 // get all users
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
@@ -30,11 +31,12 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
 export const createNewUser = async (req: Request, res: Response): Promise<void> => {
     const { first_name, last_name, email, password, role, created_by } = req.body;
     try {
+        const hashedPassword = bcrypt.hashSync(password, 10);
         const newUser = await User.create({
             first_name,
             last_name,
             email,
-            password,
+            password: hashedPassword,
             role,
             created_by,
         });
@@ -50,12 +52,15 @@ export const updateExistingUser = async (req: Request, res: Response): Promise<v
     const { first_name, last_name, email, password, role, created_by } = req.body;
 
     try {
+        const hashedPassword = bcrypt.hashSync(password, 10);
         const user = await User.findByPk(id);
         if (user) {
             user.first_name = first_name;
             user.last_name = last_name;
             user.email = email;
-            user.password = password;
+            if (password) {
+                user.password = bcrypt.hashSync(password, 10);
+            }
             user.role = role;
             user.created_by = created_by;
             await user.save();

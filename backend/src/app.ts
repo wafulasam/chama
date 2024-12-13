@@ -6,6 +6,8 @@ import memberRoutes from "./routes/memberRoutes";
 import roleRoutes from "./routes/roleRoutes"; 
 import sequelize from "./databaseConfig";
 import cors from "cors";
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express()
 const port = 3000
